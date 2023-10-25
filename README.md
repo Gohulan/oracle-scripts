@@ -58,5 +58,54 @@ SELECT tablespace_name, SUM(bytes) / 1024 / 1024 AS "Size (MB)"
 FROM dba_data_files
 GROUP BY tablespace_name;
 
-Identify Large Tables
-Find large tables that may be consuming a significant amount of space with this SQL query:
+```
+**Identify Large Tables:**
+```sql
+
+SELECT table_name, TRUNC(SUM(bytes) / 1024 / 1024) AS "Size (MB)"
+FROM dba_segments
+WHERE tablespace_name = 'your_tablespace_name'
+GROUP BY table_name
+ORDER BY "Size (MB)" DESC;
+
+```
+
+**Purge and Shrink Tables:**
+```sql
+
+DELETE FROM your_table WHERE your_condition;
+
+-- After deleting data, you can shrink the table:
+ALTER TABLE your_table DEALLOCATE UNUSED;
+
+
+```
+
+**Reclaim Space in a Tablespace:**
+```sql
+
+ALTER TABLESPACE your_tablespace COALESCE;
+
+```
+
+**To delete archived redo logs:**
+```sql
+DELETE ARCHIVELOG ALL;
+
+```
+
+**To move archived redo logs to a different location:**
+```sql
+ALTER SYSTEM SET LOG_ARCHIVE_DEST_1='LOCATION=your_new_location';
+```
+**Add Data Files to a Tablespace:**
+```sql
+ALTER TABLESPACE your_tablespace ADD DATAFILE 'path_to_new_datafile' SIZE 100M;
+```
+
+**Resizing Data Files:**
+You can resize data files if they have free space or need to be expanded:
+
+```sql
+ALTER DATABASE DATAFILE 'path_to_datafile' RESIZE 200M;
+```
