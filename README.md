@@ -58,12 +58,5 @@ SELECT tablespace_name, SUM(bytes) / 1024 / 1024 AS "Size (MB)"
 FROM dba_data_files
 GROUP BY tablespace_name;
 
-**Identify Large Tables:**
-
-```sql
-
-SELECT table_name, TRUNC(SUM(bytes) / 1024 / 1024) AS "Size (MB)"
-FROM dba_segments
-WHERE tablespace_name = 'your_tablespace_name'
-GROUP BY table_name
-ORDER BY "Size (MB)" DESC;
+Identify Large Tables
+Find large tables that may be consuming a significant amount of space with this SQL query:
